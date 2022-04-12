@@ -10,6 +10,12 @@ def find_tweets(search_string, date='', num_tweets=10000000000):
     
     return tweets
 
+def clean_data(data):
+    data_clean = data[data.lang == 'ru']
+    data_clean = data_clean[['url', 'date', 'content', 'id']]
+    
+    return data_clean
+
 def make_dataframe(keywords, date=''):
     data = find_tweets(keywords[0], date)
 
@@ -18,13 +24,7 @@ def make_dataframe(keywords, date=''):
         data_i = find_tweets(keyword, date)
         data = pd.concat([data, data_i], ignore_index=True)
 
-    return data
-
-def clean_data(data):
-    data_clean = data[data.lang == 'ru']
-    data_clean = data_clean[['url', 'date', 'content', 'id']]
-    
-    return data_clean
+    return clean_data(data)
 
 def make_examples(data, size=5):
     for tweet in data.sample(size).content.values:
