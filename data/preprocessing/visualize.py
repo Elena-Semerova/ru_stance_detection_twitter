@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-%matplotlib inline
-
 sns.set(style="darkgrid")
 
 def make_date_features(data):
