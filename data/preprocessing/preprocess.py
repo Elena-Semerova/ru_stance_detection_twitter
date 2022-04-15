@@ -14,7 +14,7 @@ def cleaning(data):
 
 def saving(data, topic_name):
     path = 'data/' + topic_name + '_clean.csv'
-    data.to_csv(path)
+    data.to_csv(path, index=False)
 
 def preprocess(data, topic_name, save=False):
     data = cleaning(data)
