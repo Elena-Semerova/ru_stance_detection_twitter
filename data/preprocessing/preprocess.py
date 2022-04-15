@@ -1,8 +1,12 @@
 import pandas as pd
+import warnings
+
+warnings.filterwarnings('ignore')
+
 
 def cleaning(data):
     data = data[['url', 'date', 'content', 'id']]
-    data.loc[:, 'date'] = pd.to_datetime(data['date'])
+    data['date'] = pd.to_datetime(data['date'])
     data = data.sort_values(by='date')
     data = data.drop_duplicates(subset=['content'], keep='first')
 
