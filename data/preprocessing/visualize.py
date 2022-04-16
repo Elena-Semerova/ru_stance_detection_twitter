@@ -5,6 +5,7 @@ import pandas as pd
 sns.set(style="darkgrid")
 
 def make_date_features(data):
+    data['date'] = pd.to_datetime(data['date'])
     data['day'] = data['date'].dt.strftime('%d')
     data['month'] = data['date'].dt.strftime('%m')
     data['year'] = data['date'].dt.strftime('%y')
