@@ -113,10 +113,10 @@ def saving(data, topic_name):
 
 def preprocess(data, topic_name, save=False):
     data = cleaning_data(data)
-    print('Cleaning is done')
+    print('\tCleaning is done')
     
     if save:
         saving(data, topic_name)
-        print('Saving is done')
+        print('\tSaving is done')
         
     return data
