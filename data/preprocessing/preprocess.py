@@ -112,7 +112,7 @@ def saving(data, topic_name):
     data.to_csv(path)
 
 def preprocess(data, topic_name, save=False):
-    data = cleaning(data)
+    data = cleaning_data(data)
     print('Cleaning is done')
     
     if save:
