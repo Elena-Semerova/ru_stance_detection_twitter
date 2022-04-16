@@ -100,7 +100,7 @@ def cleaning_data(data):
     
     for tweet in data_tweets:
         split_cleaned_tweet = cleaning_tweet(tweet)
-        cleaned_data_tweets.append(' '.join(split_cleaned_tweet))
+        cleaned_data_tweets.append(''.join(split_cleaned_tweet))
         
     data['content'] = cleaned_data_tweets
     data = data.drop_duplicates(subset=['content'], keep='first')
@@ -109,7 +109,7 @@ def cleaning_data(data):
 
 def saving(data, topic_name):
     path = 'data/' + topic_name + '_clean.csv'
-    data.to_csv(path)
+    data.to_csv(path, index=False)
 
 def preprocess(data, topic_name, save=False):
     data = cleaning_data(data)
