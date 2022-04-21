@@ -90,6 +90,12 @@ def cleaning_tweet(tweet):
 
     return cleaned_tweet
 
+def delete_short_tweets(data, count=3):
+    data['count_of_words'] = [len(x.split()) for x in data.content.values]
+    data = data[data.count_of_words > count]
+    data = data.drop(columns=['count_of_words'])
+    return data
+
 def cleaning_data(data):
     data = data[['url', 'date', 'content', 'id']]
     data['date'] = pd.to_datetime(data['date'])
@@ -104,6 +110,8 @@ def cleaning_data(data):
         
     data['content'] = cleaned_data_tweets
     data = data.drop_duplicates(subset=['content'], keep='first')
+    
+    data = delete_short_tweets(data)
 
     return data
 
