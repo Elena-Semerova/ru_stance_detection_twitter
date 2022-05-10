@@ -1,0 +1,86 @@
+{
+  "view": {
+    "type": "view.list",
+    "items": [
+      {
+        "type": "view.text",
+        "content": {
+          "type": "data.input",
+          "path": "topic"
+        },
+        "label": "Тема:"
+      },
+      {
+        "type": "view.text",
+        "content": {
+          "type": "data.input",
+          "path": "context"
+        },
+        "label": "Текст:"
+      },
+      {
+        "type": "field.radio-group",
+        "validation": {
+          "type": "condition.required"
+        },
+        "label": "Говорится ли в тексте на указанную тему?",
+        "options": [
+          {
+            "label": "Да, говорится",
+            "value": "yes",
+            "hint": "В тексте напрямую говорится на указанную тему или приводятся рассуждения на эту тему."
+          },
+          {
+            "label": "Нет, не говорится",
+            "value": "no",
+            "hint": "Текст не говорит об указанной теме, она упоминается в другом значении или невозможно точно определить контекст."
+          },
+          {
+            "label": "Не могу определить",
+            "value": "unknown"
+          }
+        ],
+        "data": {
+          "type": "data.output",
+          "path": "answer"
+        }
+      }
+    ]
+  },
+  "plugins": [
+    {
+      "1": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "answer"
+        },
+        "payload": "yes"
+      },
+      "2": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "answer"
+        },
+        "payload": "no"
+      },
+      "3": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "answer"
+        },
+        "payload": "unknown"
+      },
+      "type": "plugin.hotkeys"
+    },
+    {
+      "type": "plugin.toloka",
+      "layout": {
+        "kind": "scroll",
+        "taskWidth": 500
+      }
+    }
+  ]
+}
