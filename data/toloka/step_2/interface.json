@@ -1,0 +1,152 @@
+{
+  "view": {
+    "type": "view.list",
+    "items": [
+      {
+        "type": "view.text",
+        "content": {
+          "type": "data.input",
+          "path": "topic"
+        },
+        "label": "Тема:"
+      },
+      {
+        "type": "view.text",
+        "content": {
+          "type": "data.input",
+          "path": "context"
+        },
+        "label": "Текст:"
+      },
+      {
+        "type": "field.radio-group",
+        "validation": {
+          "type": "condition.required"
+        },
+        "label": "Какой позиции придерживается автор текста относительно заданной темы?",
+        "options": [
+          {
+            "label": "За",
+            "value": "favor",
+            "hint": "Автор текста за указанную тему и/или поддерживает ее."
+          },
+          {
+            "label": "Против",
+            "value": "against",
+            "hint": "Автор текста против указанной темы и/или плохо о ней высказывается."
+          },
+          {
+            "label": "Нейтрально",
+            "value": "neutral",
+            "hint": "Автор никак не выражает свое отношение к указанной теме (это может быть рекламный текст, заголовок статьи или факт/статистика)."
+          },
+          {
+            "label": "Другое",
+            "value": "error",
+            "hint": "Текст не говорит на указанную тему (использован другой контекст), невозможно определить позицию, текст на другом языке, это слова песни и т.п."
+          }
+        ],
+        "data": {
+          "type": "data.output",
+          "path": "stance"
+        }
+      },
+      {
+        "type": "field.radio-group",
+        "validation": {
+          "type": "condition.required"
+        },
+        "label": "Какая тональность у представленного текста?",
+        "options": [
+          {
+            "label": "Позитивная",
+            "value": "positive",
+            "hint": "У текста позитивная тональность, он освещает хорошие события, содержит комплименты и/или т.п."
+          },
+          {
+            "label": "Негативная",
+            "value": "negative",
+            "hint": "У текста негативная тональность, он освещает плохие события, содержит оскорбления и грубость и/или т.п."
+          },
+          {
+            "label": "Нейтральная",
+            "value": "neutral",
+            "hint": "Текст не содержит никакой тональности."
+          }
+        ],
+        "data": {
+          "type": "data.output",
+          "path": "sentiment"
+        }
+      }
+    ]
+  },
+  "plugins": [
+    {
+      "1": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "stance"
+        },
+        "payload": "favor"
+      },
+      "2": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "stance"
+        },
+        "payload": "against"
+      },
+      "3": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "stance"
+        },
+        "payload": "neutral"
+      },
+      "4": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "stance"
+        },
+        "payload": "error"
+      },
+      "a": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "sentiment"
+        },
+        "payload": "positive"
+      },
+      "b": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "sentiment"
+        },
+        "payload": "negative"
+      },
+      "c": {
+        "type": "action.set",
+        "data": {
+          "type": "data.output",
+          "path": "sentiment"
+        },
+        "payload": "neutral"
+      },
+      "type": "plugin.hotkeys"
+    },
+    {
+      "type": "plugin.toloka",
+      "layout": {
+        "kind": "scroll",
+        "taskWidth": 500
+      }
+    }
+  ]
+}
