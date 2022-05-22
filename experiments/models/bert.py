@@ -20,6 +20,7 @@ warnings.filterwarnings('ignore')
 
 tokenizer = AutoTokenizer.from_pretrained('DeepPavlov/rubert-base-cased-sentence')
 model = AutoModel.from_pretrained('DeepPavlov/rubert-base-cased-sentence')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def seed(value):
     random.seed(value)
@@ -208,7 +209,6 @@ def balancing_data(train_data):
 
 def training(data, batch_size, epochs, learning_rate_optimizer, n_classes, include_topics=True, balancing=None):
     seed(42)
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     if include_topics:
         data = include_info_about_topics(data)
