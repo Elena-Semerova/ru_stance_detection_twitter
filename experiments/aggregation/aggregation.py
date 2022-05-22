@@ -1,18 +1,19 @@
 import numpy as np
 import pandas as pd
 
-def aggeregate_stance(test):
-    test = test.set_index(pd.Series([i for i in range(test.shape[0])]))
-    test['true'] = [''] * test.shape[0]
+def aggeregate_stance(data):
+    data = data.sort_values(by=['content', 'skill'])
+    data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
+    data['true'] = [''] * data.shape[0]
 
-    for i in range(0, test.shape[0], 3):
-        stance_1 = test.iloc[i].stance
-        stance_2 = test.iloc[i + 1].stance
-        stance_3 = test.iloc[i + 2].stance
+    for i in range(0, data.shape[0], 3):
+        stance_1 = data.iloc[i].stance
+        stance_2 = data.iloc[i + 1].stance
+        stance_3 = data.iloc[i + 2].stance
 
-        weight_1 = test.iloc[i].weight
-        weight_2 = test.iloc[i + 1].weight
-        weight_3 = test.iloc[i + 2].weight
+        weight_1 = data.iloc[i].weight
+        weight_2 = data.iloc[i + 1].weight
+        weight_3 = data.iloc[i + 2].weight
 
         stances = [stance_1, stance_2, stance_3]
         weights = [weight_1, weight_2, weight_3]
@@ -31,41 +32,40 @@ def aggeregate_stance(test):
 
         true_idx = np.argmax(probs)
         if true_idx == 0:
-            test.loc[i, 'true'] = 'favor'
-            test.loc[i + 1, 'true'] = 'favor'
-            test.loc[i + 2, 'true'] = 'favor'
+            data.loc[i, 'true'] = 'favor'
+            data.loc[i + 1, 'true'] = 'favor'
+            data.loc[i + 2, 'true'] = 'favor'
         elif true_idx == 1:
-            test.loc[i, 'true'] = 'against'
-            test.loc[i + 1, 'true'] = 'against'
-            test.loc[i + 2, 'true'] = 'against'
+            data.loc[i, 'true'] = 'against'
+            data.loc[i + 1, 'true'] = 'against'
+            data.loc[i + 2, 'true'] = 'against'
         elif true_idx == 2:
-            test.loc[i, 'true'] = 'neutral'
-            test.loc[i + 1, 'true'] = 'neutral'
-            test.loc[i + 2, 'true'] = 'neutral'
+            data.loc[i, 'true'] = 'neutral'
+            data.loc[i + 1, 'true'] = 'neutral'
+            data.loc[i + 2, 'true'] = 'neutral'
         elif true_idx == 3:
-            test.loc[i, 'true'] = 'error'
-            test.loc[i + 1, 'true'] = 'error'
-            test.loc[i + 2, 'true'] = 'error'
+            data.loc[i, 'true'] = 'error'
+            data.loc[i + 1, 'true'] = 'error'
+            data.loc[i + 2, 'true'] = 'error'
             
-    test = test[test.stance == test.true]
-    test = test.drop_duplicates(subset=['content'], keep='first')
+    data = data[data.stance == data.true]
+    data = data.drop_duplicates(subset=['content'], keep='first')
 
-    return test
+    return data[['topic', 'content', 'stance']]
 
-import numpy as np
+def aggregate_sentiment(data):
+    data = data.sort_values(by=['content', 'skill'])
+    data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
+    data['true'] = [''] * data.shape[0]
 
-def aggregate_sentiment(test):
-    test = test.set_index(pd.Series([i for i in range(test.shape[0])]))
-    test['true'] = [''] * test.shape[0]
+    for i in range(0, data.shape[0], 3):
+        sentiment_1 = data.iloc[i].sentiment
+        sentiment_2 = data.iloc[i + 1].sentiment
+        sentiment_3 = data.iloc[i + 2].sentiment
 
-    for i in range(0, test.shape[0], 3):
-        sentiment_1 = test.iloc[i].sentiment
-        sentiment_2 = test.iloc[i + 1].sentiment
-        sentiment_3 = test.iloc[i + 2].sentiment
-
-        weight_1 = test.iloc[i].weight
-        weight_2 = test.iloc[i + 1].weight
-        weight_3 = test.iloc[i + 2].weight
+        weight_1 = data.iloc[i].weight
+        weight_2 = data.iloc[i + 1].weight
+        weight_3 = data.iloc[i + 2].weight
 
         sentiments = [sentiment_1, sentiment_2, sentiment_3]
         weights = [weight_1, weight_2, weight_3]
@@ -82,19 +82,19 @@ def aggregate_sentiment(test):
 
         true_idx = np.argmax(probs)
         if true_idx == 0:
-            test.loc[i, 'true'] = 'positive'
-            test.loc[i + 1, 'true'] = 'positive'
-            test.loc[i + 2, 'true'] = 'positive'
+            data.loc[i, 'true'] = 'positive'
+            data.loc[i + 1, 'true'] = 'positive'
+            data.loc[i + 2, 'true'] = 'positive'
         elif true_idx == 1:
-            test.loc[i, 'true'] = 'negative'
-            test.loc[i + 1, 'true'] = 'negative'
-            test.loc[i + 2, 'true'] = 'negative'
+            data.loc[i, 'true'] = 'negative'
+            data.loc[i + 1, 'true'] = 'negative'
+            data.loc[i + 2, 'true'] = 'negative'
         elif true_idx == 2:
-            test.loc[i, 'true'] = 'neutral'
-            test.loc[i + 1, 'true'] = 'neutral'
-            test.loc[i + 2, 'true'] = 'neutral'
+            data.loc[i, 'true'] = 'neutral'
+            data.loc[i + 1, 'true'] = 'neutral'
+            data.loc[i + 2, 'true'] = 'neutral'
             
-    test = test[test.sentiment == test.true]
-    test = test.drop_duplicates(subset=['content'], keep='first')
+    data = data[data.sentiment == data.true]
+    data = data.drop_duplicates(subset=['content'], keep='first')
 
-    return test
+    return data[['topic', 'content', 'sentiment']]
