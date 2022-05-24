@@ -4,6 +4,11 @@ import pandas as pd
 
 sns.set(style="darkgrid")
 
+def make_examples(data, size=5):
+    for tweet in data.sample(size).content.values:
+        print(tweet)
+        print()
+
 def make_date_features(data):
     data['date'] = pd.to_datetime(data['date'])
     data['day'] = data['date'].dt.strftime('%d')
