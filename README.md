@@ -28,21 +28,21 @@ In final version of our dataset we have 5 targets (topics): `cancel culture`, `f
 
 #### cancel culture
 
-<img src="https://sun1.userapi.com/sun1-93/s/v1/ig2/X5byfUacEuv11FCr25OR0vhkpM2IvRadN7CSZJmPIXVosp49HTAObnlC1bJ5q1kSqDAUpdi-qY0RNSmcDktrOMqD.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-56/s/v1/ig2/oRpVrKYOZHLSEZjbTgt4zbd3uKvIjqJtfXAqlRtkbfaRIGrH6ZU3yEz2IGKqVITA7Hi1zHYEooXmlZQbJVXgxVwJ.jpg?size=864x504&quality=95&type=album" width="400"/> 
+<img src="https://sun1.userapi.com/sun1-91/s/v1/ig2/Z3uDWjhmAnTKga2G6hn1fsF0_TPzuetlJVqhMFQ8RmNqcdEvdioxRDmw1GAk61tpz33PYmfO7J-CHW0dl6ZU94dI.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-56/s/v1/ig2/oRpVrKYOZHLSEZjbTgt4zbd3uKvIjqJtfXAqlRtkbfaRIGrH6ZU3yEz2IGKqVITA7Hi1zHYEooXmlZQbJVXgxVwJ.jpg?size=864x504&quality=95&type=album" width="400"/> 
 
 #### feminism
 
-<img src="https://sun9-west.userapi.com/sun9-65/s/v1/ig2/t2JqIqRnkhpFHgS9xfhxnQLc6BJxlc07QLLAnfzVBuaFZAI-kOQb09VIi69SXr3ev7yhvZv1_q45Cd9UBYNTB2Wh.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-25/s/v1/ig2/DVy7NLvqj6jL649RKV_EyACU29MnBWNs0UrNRJsi8TrJMJdzy8lY-cjRt-bIo8f4wQGOfrk7W8d_qVdGto9v4gXj.jpg?size=864x504&quality=95&type=album" width="400"/> 
+<img src="https://sun1.userapi.com/sun1-89/s/v1/ig2/IcZv61CkcgDV0IEqwwIHgBRY3HxLkq7vwZHvyrDIXdNX1mTtywiFEeI-2lHvXqDRfqYbx6wa6ZHgii6v2fEde4do.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-25/s/v1/ig2/DVy7NLvqj6jL649RKV_EyACU29MnBWNs0UrNRJsi8TrJMJdzy8lY-cjRt-bIo8f4wQGOfrk7W8d_qVdGto9v4gXj.jpg?size=864x504&quality=95&type=album" width="400"/> 
 
 #### LGBTQ+
 
-<img src="https://sun9-west.userapi.com/sun9-56/s/v1/ig2/Z068ZPK9OA7djHf6YWtYq_iA7amtBFZ0SNhCgDkr8wj36G2OEa529ppJjTFEl15zk2cAdKIt4JYczkQsOsPrh1gp.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun9-east.userapi.com/sun9-28/s/v1/ig2/I3e7RbGO6tSFObn4YEv63L__9jGDLJjvZKXt7kwRq79SG62DeFENSpOyXzYEWDdUfX0cxbFKioc-meumqtJ2R3_P.jpg?size=864x504&quality=95&type=album" width="400"/> 
+<img src="https://sun1.userapi.com/sun1-16/s/v1/ig2/nWL9dmiAVmMQohq4l9ka92zFym0QNEXu3wj209PDQmxbMBLSfw4EPatTLopJaM6MC1qZZblO_jsI9toOPz7LLoFZ.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun9-east.userapi.com/sun9-28/s/v1/ig2/I3e7RbGO6tSFObn4YEv63L__9jGDLJjvZKXt7kwRq79SG62DeFENSpOyXzYEWDdUfX0cxbFKioc-meumqtJ2R3_P.jpg?size=864x504&quality=95&type=album" width="400"/> 
 
 #### ageism
 
-<img src="https://sun9-east.userapi.com/sun9-73/s/v1/ig2/-ERgieBV0xW-5MckuowUcIbfDk99gcLAaT6iccdZwtVHFoTqsbMV15qh1d3mJ2kiwrYlDJyaT_ceckHatJTNvzoU.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-94/s/v1/ig2/Prw13Y64J768rz2YpQKnNG6yTqIT0BL2Et3GpDGvquxQ0p-m5SJJG_NnnH6vNBXD2U6u5h41mC3ZU-s4aCmg0ZGg.jpg?size=864x504&quality=95&type=album" width="400"/> 
+<img src="https://sun1.userapi.com/sun1-26/s/v1/ig2/1xp_gUaSdjM1mMAuCNKeLO1nIlQc5P3wMRNielrINunJmytrGbrY-AAY42bSwxsNnu5zn3ik67jU6m1UtaRTP7gV.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-94/s/v1/ig2/Prw13Y64J768rz2YpQKnNG6yTqIT0BL2Et3GpDGvquxQ0p-m5SJJG_NnnH6vNBXD2U6u5h41mC3ZU-s4aCmg0ZGg.jpg?size=864x504&quality=95&type=album" width="400"/> 
 
 #### lookism
 
-<img src="https://sun1.userapi.com/sun1-47/s/v1/ig2/T7IUKeGyVe-RHvfDSWtqtoWSeSOShhDbtGp5l--mWp2Qb9sLsU1pqppCLmB62eL6qrViY6iMN-pKd4kLj2lKlA3f.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-19/s/v1/ig2/xtiz_PFipiPlMB1CwW-4TlCh6eGY_JJOxIb6MzXwOnRCjwyoGfPQpnryQbuLCvhPHJsq1DjHNZcWqaXNuxhIrsgi.jpg?size=864x504&quality=95&type=album" width="400"/> 
+<img src="https://sun9-west.userapi.com/sun9-16/s/v1/ig2/vCGEz8rEBRPdDX4HpnYySvgsHCGFXPJjlmE0_5_33ddmu06dthnSiuhkO751Cbd_k7UPfS426RQYE7szmBxnaW0N.jpg?size=864x504&quality=95&type=album" width="400"/> <img src="https://sun1.userapi.com/sun1-19/s/v1/ig2/xtiz_PFipiPlMB1CwW-4TlCh6eGY_JJOxIb6MzXwOnRCjwyoGfPQpnryQbuLCvhPHJsq1DjHNZcWqaXNuxhIrsgi.jpg?size=864x504&quality=95&type=album" width="400"/> 
 
