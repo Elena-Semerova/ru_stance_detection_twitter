@@ -172,6 +172,7 @@ def saving(data: pd.DataFrame, topic_name: str) -> None:
         data (pd.DataFrame): dataframe to save
         topic_name (str): name of dataframe's topic
     """
+    # to do: name config
     path = "data/" + topic_name + "_clean.csv"
     data.to_csv(path, index=False)
 

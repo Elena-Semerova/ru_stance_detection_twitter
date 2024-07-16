@@ -39,6 +39,7 @@ def make_dataset(
     --------
         data (pd.DataFrame): total dataset
     """
+    # to do: name config
     data = pd.DataFrame({"content": [], "topic": []})
     for topic in topics:
         # clean_data

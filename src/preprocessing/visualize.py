@@ -4,8 +4,10 @@ import seaborn as sns
 
 sns.set(style="darkgrid")
 
+COUNT_OF_SAMPLES = 5
 
-def make_examples(data: pd.DataFrame, size: int = 5) -> None:
+
+def make_examples(data: pd.DataFrame, size: int = COUNT_OF_SAMPLES) -> None:
     """
     Printing some examples of tweets by input dataframe
 
@@ -67,3 +69,5 @@ def visualize_year_month(data: pd.DataFrame, topic_name: str = "") -> None:
     plt.ylabel("number of tweets", fontsize=12)
 
     plt.show()
+
+    plt.savefig(f"dependence_number_of_tweets_{topic_name}.png", format="png")

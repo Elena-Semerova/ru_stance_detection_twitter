@@ -13,6 +13,13 @@ from xgboost import XGBClassifier
 
 warnings.filterwarnings("ignore")
 
+LOGREG_PARAMS = {"penalty": ["l1", "l2"], "C": [0.01, 0.05, 0.1, 0.2, 0.5, 1, 2]}
+XGBOOST_PARAMS = {
+    "eta": [0.05, 0.2, 0.5],
+    "gamma": [0, 0.1, 0.5, 1],
+    "max_depth": [3, 5, 7],
+}
+
 
 def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
     """
@@ -106,10 +113,10 @@ def bow_for_train(X_train_content: pd.DataFrame, save: bool = True) -> Any:
         bow_vectorizer (Any): trained vectorizer
     """
     bow_vectorizer = CountVectorizer()
-    X_train_bow = bow_vectorizer.fit_transform(X_train_content)
+    bow_vectorizer.fit(X_train_content)
 
     if save:
-        joblib.dump(bow_vectorizer, "bow/bow_vectorizer" + ".pkl")
+        joblib.dump(bow_vectorizer, "bow/bow_vectorizer.pkl")
 
     return bow_vectorizer
 
@@ -128,10 +135,10 @@ def tfidf_for_train(X_train_content: pd.DataFrame, save: bool = True) -> Any:
         bow_vectorizer (Any): trained vectorizer
     """
     tfidf_vectorizer = TfidfVectorizer()
-    X_train_bow = tfidf_vectorizer.fit_transform(X_train_content)
+    tfidf_vectorizer.fit(X_train_content)
 
     if save:
-        joblib.dump(tfidf_vectorizer, "tfidf/tfidf_vectorizer" + ".pkl")
+        joblib.dump(tfidf_vectorizer, "tfidf/tfidf_vectorizer.pkl")
 
     return tfidf_vectorizer
 
@@ -303,14 +310,10 @@ def best_model(
         return
 
     if model_name == "logreg":
-        model_params = {"penalty": ["l1", "l2"], "C": [0.01, 0.05, 0.1, 0.2, 0.5, 1, 2]}
+        model_params = LOGREG_PARAMS
         model = LogisticRegression()
     elif model_name == "xgboost":
-        model_params = {
-            "eta": [0.05, 0.2, 0.5],
-            "gamma": [0, 0.1, 0.5, 1],
-            "max_depth": [3, 5, 7],
-        }
+        model_params = XGBOOST_PARAMS
         model = XGBClassifier()
     else:
         print("Choose LogReg or XGBoost model")

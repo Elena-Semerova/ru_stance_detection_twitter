@@ -4,6 +4,8 @@ import pandas as pd
 from nltk.corpus import stopwords
 from pymystem3 import Mystem
 
+LANGUAGE = "russian"
+
 
 def lowercasing(tweet: str) -> str:
     """
@@ -54,21 +56,22 @@ def lemmatization(tweet: str) -> str:
     return new_tweet
 
 
-def delete_stopwords(tweet: str) -> str:
+def delete_stopwords(tweet: str, language: str = LANGUAGE) -> str:
     """
     Deleting stopwords from tweet
 
     Params:
     -------
         tweet (str): input tweet
+        language (str): language of stopwords
 
     Returns:
     --------
         new_tweet (str): tweet without stopwords
     """
-    russian_stopwords = stopwords.words("russian")
+    stopwords_lang = stopwords.words(language)
     split_tweet = tweet.split()
-    new_split_tweet = [word for word in split_tweet if word not in russian_stopwords]
+    new_split_tweet = [word for word in split_tweet if word not in stopwords_lang]
     new_tweet = " ".join(new_split_tweet)
 
     return new_tweet

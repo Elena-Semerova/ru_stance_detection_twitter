@@ -1,6 +1,4 @@
 import random
-import re
-import string
 import warnings
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -8,11 +6,8 @@ import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
-import transformers
 from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-from torch import Tensor, nn, optim
-from torch.optim.lr_scheduler import LambdaLR
+from torch import Tensor, nn
 from torch.utils.data import DataLoader, Dataset, RandomSampler, SequentialSampler
 from tqdm import tqdm
 from transformers import (
@@ -24,12 +19,16 @@ from transformers import (
 
 warnings.filterwarnings("ignore")
 
-tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased-sentence")
-model = AutoModel.from_pretrained("DeepPavlov/rubert-base-cased-sentence")
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+BERT_MODEL = "DeepPavlov/rubert-base-cased-sentence"
+
+TOKENIZER = AutoTokenizer.from_pretrained(BERT_MODEL)
+MODEL = AutoModel.from_pretrained(BERT_MODEL)
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+SEED_NUMBER = 42
 
 
-def seed(value: int) -> None:
+def seed(value: int = SEED_NUMBER) -> None:
     """
     Fixing seed
 
@@ -77,7 +76,7 @@ class RussianStanceTwitterDataset(Dataset):
 
 
 class RussianStanceTwitterClassifier(nn.Module):
-    def __init__(self, n_classes: int):
+    def __init__(self, n_classes: int, model: Any = MODEL):
         super(RussianStanceTwitterClassifier, self).__init__()
         self.bert = model
         self.drop = nn.Dropout(p=0.3)
@@ -250,7 +249,9 @@ def eval_model(
 
 
 @torch.no_grad()
-def get_predictions(model: Any, data_loader: DataLoader) -> Tuple[Tensor, Tensor]:
+def get_predictions(
+    model: Any, data_loader: DataLoader, device: torch.device = DEVICE
+) -> Tuple[Tensor, Tensor]:
     """
     Predicting labels for valid data
 
@@ -258,6 +259,7 @@ def get_predictions(model: Any, data_loader: DataLoader) -> Tuple[Tensor, Tensor
     -------
         model (Any): trained model
         data_loader (DataLoader): validation dataloader
+        device (torch.device): device for trainig
 
     Returns:
     --------
@@ -267,7 +269,6 @@ def get_predictions(model: Any, data_loader: DataLoader) -> Tuple[Tensor, Tensor
 
     predictions = []
     prediction_probs = []
-    real_values = []
 
     for d in data_loader:
         input_ids = d["input_ids"].to(device)
@@ -351,6 +352,8 @@ def training(
     n_classes: int,
     include_topics: bool = True,
     balancing: str = None,
+    tokenizer: Any = TOKENIZER,
+    device: torch.device = DEVICE,
 ) -> None:
     """
     Training model using BERT
@@ -365,7 +368,7 @@ def training(
         include_topics (bool): flag for including topic as a feature
         balancing (str): flag for balancing data
     """
-    seed(42)
+    seed()
 
     if include_topics:
         data = include_info_about_topics(data)

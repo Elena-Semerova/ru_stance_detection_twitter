@@ -2,14 +2,19 @@ from typing import Dict, List, Tuple
 
 import pymorphy2
 
+LIST_TAGS_POS = ["INFN", "VERB"]
 
-def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
+
+def make_keywords(
+    topic_dict: Dict[str, int], list_pos_tags: List[str] = LIST_TAGS_POS
+) -> Tuple[List[str], List[str]]:
     """
     Making list with final keywords and list with keywords that should be processing
 
     Params:
     -------
         topic_dict (Dict[str, int]): dictionary with some keywords by which new extended lists will be built
+        list_pos_tags (List[str]): list of pos tags
 
     Returns:
     --------
@@ -26,7 +31,7 @@ def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
         elif value == 1:
             word_parse = morph.parse(key)[0]
 
-            if word_parse.tag.POS == "INFN" or word_parse.tag.POS == "VERB":
+            if word_parse.tag.POS in list_pos_tags:
                 new_words = list(
                     set([lexem.inflect({"VERB"}).word for lexem in word_parse.lexeme])
                 )
