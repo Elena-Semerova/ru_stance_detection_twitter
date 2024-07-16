@@ -1,5 +1,5 @@
 import pandas as pd
-from ru_stance_detection_twitter.data.labeling.label_config import *
+from ru_stance_detection_twitter.configs.label_config import *
 
 def read_data(topic_name, path):
     data = pd.read_csv(path)
