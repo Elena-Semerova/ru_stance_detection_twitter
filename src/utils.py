@@ -1,5 +1,7 @@
-import yaml
 from typing import Any
+
+import yaml
+
 
 def read_yml_file(file_path: str) -> Any:
     """

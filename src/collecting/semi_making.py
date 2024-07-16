@@ -1,5 +1,6 @@
+from typing import Dict, List, Tuple
+
 import pymorphy2
-from typing import Dict, Tuple, List
 
 
 def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
@@ -15,7 +16,7 @@ def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
         (Tuple[List[str], List[str]]): list with final keywords and list with keywords for processing
     """
     morph = pymorphy2.MorphAnalyzer()
-    
+
     keywords_final = []
     for_processing = []
 
@@ -25,8 +26,10 @@ def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
         elif value == 1:
             word_parse = morph.parse(key)[0]
 
-            if word_parse.tag.POS == 'INFN' or word_parse.tag.POS == 'VERB':
-                new_words = list(set([lexem.inflect({'VERB'}).word for lexem in word_parse.lexeme]))
+            if word_parse.tag.POS == "INFN" or word_parse.tag.POS == "VERB":
+                new_words = list(
+                    set([lexem.inflect({"VERB"}).word for lexem in word_parse.lexeme])
+                )
                 keywords_final.extend(new_words)
             else:
                 new_words = list(set([lexem.word for lexem in word_parse.lexeme]))

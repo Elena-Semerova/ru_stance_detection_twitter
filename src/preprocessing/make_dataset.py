@@ -1,6 +1,7 @@
-import pandas as pd
 from typing import List
-from ru_stance_detection_twitter.configs.label_config import *
+
+import pandas as pd
+
 
 def read_data(topic_name: str, path: str) -> pd.DataFrame:
     """
@@ -16,11 +17,14 @@ def read_data(topic_name: str, path: str) -> pd.DataFrame:
         (pd.DataFrame): final dataframe
     """
     data = pd.read_csv(path)
-    data['topic'] = topic_name
-    
-    return data[['content', 'topic']]
+    data["topic"] = topic_name
 
-def make_dataset(topics: List[str], topics_ru: List[str], shuffle: bool = False, save: bool = False) -> pd.DataFrame:
+    return data[["content", "topic"]]
+
+
+def make_dataset(
+    topics: List[str], topics_ru: List[str], shuffle: bool = False, save: bool = False
+) -> pd.DataFrame:
     """
     Making total dataset with all topics
 
@@ -35,18 +39,18 @@ def make_dataset(topics: List[str], topics_ru: List[str], shuffle: bool = False,
     --------
         data (pd.DataFrame): total dataset
     """
-    data = pd.DataFrame({'content':[], 'topic':[]})
+    data = pd.DataFrame({"content": [], "topic": []})
     for topic in topics:
         # clean_data
-        path = topic.upper() + '_PATH'
+        path = topic.upper() + "_PATH"
         topic_name = topics_ru[topic]
         data_i = read_data(topic_name, globals()[path])
         data = pd.concat([data, data_i], ignore_index=True)
-        
+
     if shuffle:
         data = data.sample(frac=1).reset_index(drop=True)
-    
+
     if save:
-        data.to_csv('data/data_for_labeling.csv', index=False)
-    
+        data.to_csv("data/data_for_labeling.csv", index=False)
+
     return data
