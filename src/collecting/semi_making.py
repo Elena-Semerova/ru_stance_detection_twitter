@@ -1,5 +1,7 @@
 import pymorphy2
 
+
+
 def make_keywords(topic_dict):
     morph = pymorphy2.MorphAnalyzer()
     

@@ -10,6 +10,7 @@ def read_data(topic_name, path):
 def make_dataset(topics, topics_ru, shuffle=False, save=False):
     data = pd.DataFrame({'content':[], 'topic':[]})
     for topic in topics:
+        # clean_data
         path = topic.upper() + '_PATH'
         topic_name = topics_ru[topic]
         data_i = read_data(topic_name, globals()[path])
