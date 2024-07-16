@@ -1,10 +1,11 @@
 import pandas as pd
 import re
 import warnings
+from typing import List
 
 warnings.filterwarnings('ignore')
 
-def replacing(symbols, replacement, tweet):
+def replacing(symbols: List[str], replacement: List[str], tweet: str) -> str:
     symbols = [element for element in symbols if element in tweet]
     
     for symbol in symbols:
@@ -12,7 +13,7 @@ def replacing(symbols, replacement, tweet):
         
     return tweet
 
-def cleaning_tweet(tweet):
+def cleaning_tweet(tweet: str) -> str:
     tweet = replacing(
         '\u00AB\u00BB\u2039\u203A\u201E\u201A\u201C\u201F\u2018\u201B\u201D\u2019',
         '\u0022',
@@ -90,13 +91,13 @@ def cleaning_tweet(tweet):
 
     return cleaned_tweet
 
-def delete_short_tweets(data, count=3):
+def delete_short_tweets(data: pd.DataFrame, count: int = 3) -> pd.DataFrame:
     data['count_of_words'] = [len(x.split()) for x in data.content.values]
     data = data[data.count_of_words > count]
     data = data.drop(columns=['count_of_words'])
     return data
 
-def cleaning_data(data):
+def cleaning_data(data: pd.DataFrame) -> pd.DataFrame:
     data = data[['url', 'date', 'content', 'id']]
     data['date'] = pd.to_datetime(data['date'])
     data = data.sort_values(by='date')
@@ -115,11 +116,11 @@ def cleaning_data(data):
 
     return data
 
-def saving(data, topic_name):
+def saving(data: pd.DataFrame, topic_name: str) -> None:
     path = 'data/' + topic_name + '_clean.csv'
     data.to_csv(path, index=False)
 
-def preprocess(data, topic_name, save=False):
+def preprocess(data: pd.DataFrame, topic_name: str, save: bool = False) -> pd.DataFrame:
     data = cleaning_data(data)
     print('\tCleaning is done')
     

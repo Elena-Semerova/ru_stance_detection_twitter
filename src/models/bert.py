@@ -15,6 +15,8 @@ from sklearn.metrics import classification_report
 from torch import nn, optim
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
+from torch.optim.lr_scheduler import LambdaLR
+from typing import Any, Dict, List, Optional
 
 warnings.filterwarnings('ignore')
 
@@ -22,13 +24,13 @@ tokenizer = AutoTokenizer.from_pretrained('DeepPavlov/rubert-base-cased-sentence
 model = AutoModel.from_pretrained('DeepPavlov/rubert-base-cased-sentence')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-def seed(value):
+def seed(value: int) -> None:
     random.seed(value)
     torch.manual_seed(value)
     torch.cuda.manual_seed(value)
     
 class RussianStanceTwitterDataset(Dataset):
-    def __init__(self, tweets, stances, tokenizer, max_len):
+    def __init__(self, tweets: np.ndarray, stances: np.ndarray, tokenizer: Any, max_len: int):
         self.tweets = tweets
         self.stances = stances
         self.tokenizer = tokenizer
@@ -37,7 +39,7 @@ class RussianStanceTwitterDataset(Dataset):
     def __len__(self):
         return len(self.tweets)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Dict[str, Any]:
         tweet = str(self.tweets[item])
         stance = self.stances[item]
         
@@ -59,19 +61,19 @@ class RussianStanceTwitterDataset(Dataset):
         }
     
 class RussianStanceTwitterClassifier(nn.Module):
-    def __init__(self, n_classes):
+    def __init__(self, n_classes: int):
         super(RussianStanceTwitterClassifier, self).__init__()
         self.bert = model
         self.drop = nn.Dropout(p=0.3)
         self.out = nn.Linear(self.bert.config.hidden_size, n_classes)
 
-    def forward(self, input_ids, attention_mask):
+    def forward(self, input_ids: List[int], attention_mask: Optional[torch.FloatTensor]) -> Any:
         outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask)
         last_hidden_state_cls = outputs[0][:, 0, :]
         
         return self.out(self.drop(last_hidden_state_cls))
     
-def create_train_dataloader(X_data, y_data, tokenizer, batch_size, max_len):
+def create_train_dataloader(X_data: np.ndarray, y_data: np.ndarray, tokenizer: Any, batch_size: int, max_len: int) -> DataLoader:
     dataset = RussianStanceTwitterDataset(
         tweets=X_data,
         stances=y_data,
@@ -85,7 +87,7 @@ def create_train_dataloader(X_data, y_data, tokenizer, batch_size, max_len):
         batch_size=batch_size,
     )
 
-def create_test_dataloader(X_data, tokenizer, batch_size, max_len):
+def create_test_dataloader(X_data: np.ndarray, tokenizer: Any, batch_size: int, max_len: int) -> DataLoader:
     dataset = RussianStanceTwitterDataset(
         tweets=X_data,
         stances=[0] * len(X_data),
@@ -99,7 +101,7 @@ def create_test_dataloader(X_data, tokenizer, batch_size, max_len):
         batch_size=batch_size,
     )
 
-def train_epoch(model, data_loader, loss_fn, optimizer, device, scheduler, n_examples):
+def train_epoch(model: Any, data_loader: DataLoader, loss_fn: Any, optimizer: Any, device: torch.device, scheduler: Any, n_examples: int):
     model = model.train()
     losses = []
     correct_predictions = 0
@@ -127,7 +129,7 @@ def train_epoch(model, data_loader, loss_fn, optimizer, device, scheduler, n_exa
     return correct_predictions.double() / n_examples, np.mean(losses)
 
 @torch.no_grad()
-def eval_model(model, data_loader, loss_fn, device, n_examples):
+def eval_model(model: Any, data_loader: DataLoader, loss_fn: Any, device: torch.device, n_examples: int):
     model = model.eval()
     losses = []
     correct_predictions = 0
@@ -148,7 +150,7 @@ def eval_model(model, data_loader, loss_fn, device, n_examples):
     return correct_predictions.double() / n_examples, np.mean(losses)
 
 @torch.no_grad()
-def get_predictions(model, data_loader):
+def get_predictions(model: Any, data_loader: DataLoader):
     model.eval()
     
     predictions = []
@@ -173,7 +175,7 @@ def get_predictions(model, data_loader):
     
     return predictions, prediction_probs
 
-def include_info_about_topics(data):
+def include_info_about_topics(data: pd.DataFrame) -> pd.DataFrame:
     for i in range(data.shape[0]):
         tweet = data.loc[i].content
         topic = data.loc[i].topic
@@ -192,7 +194,7 @@ def include_info_about_topics(data):
         data.loc[i, 'content'] = tweet_with_topic 
     return data
 
-def balancing_data(train_data):
+def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
     train_0 = train_data[train_data.stance == 0]
     train_1 = train_data[train_data.stance == 1]
     train_2 = train_data[train_data.stance == 2]
@@ -207,7 +209,7 @@ def balancing_data(train_data):
 
     return train_data.sample(frac=1).reset_index(drop=True)
 
-def training(data, batch_size, epochs, learning_rate_optimizer, n_classes, include_topics=True, balancing=None):
+def training(data: pd.DataFrame, batch_size: int, epochs: int, learning_rate_optimizer: float, n_classes: int, include_topics: bool = True, balancing: str = None) -> None:
     seed(42)
     
     if include_topics:

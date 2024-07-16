@@ -1,13 +1,14 @@
 import pandas as pd
+from typing import List
 from ru_stance_detection_twitter.configs.label_config import *
 
-def read_data(topic_name, path):
+def read_data(topic_name: str, path: str) -> pd.DataFrame:
     data = pd.read_csv(path)
     data['topic'] = topic_name
     
     return data[['content', 'topic']]
 
-def make_dataset(topics, topics_ru, shuffle=False, save=False):
+def make_dataset(topics: List[str], topics_ru: List[str], shuffle: bool = False, save: bool = False) -> pd.DataFrame:
     data = pd.DataFrame({'content':[], 'topic':[]})
     for topic in topics:
         # clean_data

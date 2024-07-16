@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def aggeregate_stance(data):
+def aggeregate_stance(data: pd.DataFrame) -> pd.DataFrame:
     data = data.sort_values(by=['content', 'skill'])
     data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
     data['true'] = [''] * data.shape[0]
@@ -53,7 +53,7 @@ def aggeregate_stance(data):
 
     return data[['topic', 'content', 'stance']]
 
-def aggregate_sentiment(data):
+def aggregate_sentiment(data: pd.DataFrame) -> pd.DataFrame:
     data = data.sort_values(by=['content', 'skill'])
     data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
     data['true'] = [''] * data.shape[0]

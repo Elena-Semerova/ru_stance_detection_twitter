@@ -1,8 +1,8 @@
 import pymorphy2
+from typing import Dict, Tuple, List
 
 
-
-def make_keywords(topic_dict):
+def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
     morph = pymorphy2.MorphAnalyzer()
     
     keywords_final = []
