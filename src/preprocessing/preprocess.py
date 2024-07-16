@@ -6,6 +6,19 @@ from typing import List
 warnings.filterwarnings('ignore')
 
 def replacing(symbols: List[str], replacement: List[str], tweet: str) -> str:
+    """
+    Replacing symbols on anothers at input tweet
+
+    Params:
+    -------
+        symbols (List[str]): list of symbols that shoul be replaced
+        replacement (List[str]): list of symbols to be replaced with
+        tweet (str): input tweet
+
+    Returns:
+    --------
+        tweet (str): new tweet
+    """
     symbols = [element for element in symbols if element in tweet]
     
     for symbol in symbols:
@@ -14,6 +27,17 @@ def replacing(symbols: List[str], replacement: List[str], tweet: str) -> str:
     return tweet
 
 def cleaning_tweet(tweet: str) -> str:
+    """
+    Cleaning input tweet with all replacements
+
+    Params:
+    -------
+        tweet (str): input tweet
+
+    Returns:
+    --------
+        cleaned_tweet (str): new tweet
+    """
     tweet = replacing(
         '\u00AB\u00BB\u2039\u203A\u201E\u201A\u201C\u201F\u2018\u201B\u201D\u2019',
         '\u0022',
@@ -92,12 +116,35 @@ def cleaning_tweet(tweet: str) -> str:
     return cleaned_tweet
 
 def delete_short_tweets(data: pd.DataFrame, count: int = 3) -> pd.DataFrame:
+    """
+    Deleting short tweets from dataframe
+
+    Params:
+    -------
+        data (pd.DataFrame): input dataframe with tweets
+        count (int): min count of words at tweet
+
+    Returns:
+    --------
+        data (pd.DataFrame): filtered dataframe
+    """
     data['count_of_words'] = [len(x.split()) for x in data.content.values]
     data = data[data.count_of_words > count]
     data = data.drop(columns=['count_of_words'])
     return data
 
 def cleaning_data(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Cleaning tweets at dataframe and deleting duplicates
+
+    Params:
+    -------
+        data (pd.DataFrame): input dataframe with tweets
+
+    Returns:
+    --------
+        data (pd.DataFrame): cleaned dataframe
+    """
     data = data[['url', 'date', 'content', 'id']]
     data['date'] = pd.to_datetime(data['date'])
     data = data.sort_values(by='date')
@@ -117,10 +164,31 @@ def cleaning_data(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 def saving(data: pd.DataFrame, topic_name: str) -> None:
+    """
+    Saving dataframe
+
+    Params:
+    -------
+        data (pd.DataFrame): dataframe to save
+        topic_name (str): name of dataframe's topic
+    """
     path = 'data/' + topic_name + '_clean.csv'
     data.to_csv(path, index=False)
 
 def preprocess(data: pd.DataFrame, topic_name: str, save: bool = False) -> pd.DataFrame:
+    """
+    Preprocessing input data by cleaning
+
+    Params:
+    -------
+        data (pd.DataFrame): input dataframe
+        topic_name (str): name of dataframe's topic
+        save (bool): flag for saving
+
+    Returns:
+    --------
+        data (pd.DataFrame): cleaned dataframe
+    """
     data = cleaning_data(data)
     print('\tCleaning is done')
     

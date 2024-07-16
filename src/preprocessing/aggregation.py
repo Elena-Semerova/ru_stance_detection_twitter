@@ -2,6 +2,17 @@ import numpy as np
 import pandas as pd
 
 def aggeregate_stance(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aggregating labels with stances after toloka
+
+    Params:
+    -------
+        data (pd.DataFrame): dataframe with answers after toloka
+
+    Returns:
+    --------
+        (pd.DataFrame): dataframe with final labels
+    """
     data = data.sort_values(by=['content', 'skill'])
     data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
     data['true'] = [''] * data.shape[0]
@@ -54,6 +65,17 @@ def aggeregate_stance(data: pd.DataFrame) -> pd.DataFrame:
     return data[['topic', 'content', 'stance']]
 
 def aggregate_sentiment(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Aggregating labels with sentiments after toloka
+
+    Params:
+    -------
+        data (pd.DataFrame): dataframe with answers after toloka
+
+    Returns:
+    --------
+        (pd.DataFrame): dataframe with final labels
+    """
     data = data.sort_values(by=['content', 'skill'])
     data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
     data['true'] = [''] * data.shape[0]

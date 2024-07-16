@@ -3,6 +3,17 @@ from typing import Dict, Tuple, List
 
 
 def make_keywords(topic_dict: Dict[str, int]) -> Tuple[List[str], List[str]]:
+    """
+    Making list with final keywords and list with keywords that should be processing
+
+    Params:
+    -------
+        topic_dict (Dict[str, int]): dictionary with some keywords by which new extended lists will be built
+
+    Returns:
+    --------
+        (Tuple[List[str], List[str]]): list with final keywords and list with keywords for processing
+    """
     morph = pymorphy2.MorphAnalyzer()
     
     keywords_final = []

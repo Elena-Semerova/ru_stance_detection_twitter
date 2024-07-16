@@ -12,11 +12,11 @@ import pandas as pd
 from tqdm import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-from torch import nn, optim
+from torch import nn, optim, Tensor
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader, RandomSampler, SequentialSampler
 from torch.optim.lr_scheduler import LambdaLR
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 warnings.filterwarnings('ignore')
 
@@ -25,6 +25,13 @@ model = AutoModel.from_pretrained('DeepPavlov/rubert-base-cased-sentence')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def seed(value: int) -> None:
+    """
+    Fixing seed 
+
+    Params:
+    -------
+        seed (int): seed value
+    """
     random.seed(value)
     torch.manual_seed(value)
     torch.cuda.manual_seed(value)
@@ -74,6 +81,21 @@ class RussianStanceTwitterClassifier(nn.Module):
         return self.out(self.drop(last_hidden_state_cls))
     
 def create_train_dataloader(X_data: np.ndarray, y_data: np.ndarray, tokenizer: Any, batch_size: int, max_len: int) -> DataLoader:
+    """
+    Creating train dataloader
+
+    Params:
+    -------
+        X_data (np.ndarray): input train data 
+        y_data (np.ndarray): input train labels
+        tokenizer (Any): tokenizer for data
+        batch_size (int): size for batches
+        max_len (int): max length for vectors
+
+    Returns:
+    --------
+        (DataLoader): train dataloader
+    """
     dataset = RussianStanceTwitterDataset(
         tweets=X_data,
         stances=y_data,
@@ -88,6 +110,20 @@ def create_train_dataloader(X_data: np.ndarray, y_data: np.ndarray, tokenizer: A
     )
 
 def create_test_dataloader(X_data: np.ndarray, tokenizer: Any, batch_size: int, max_len: int) -> DataLoader:
+    """
+    Creating test dataloader
+
+    Params:
+    -------
+        X_data (np.ndarray): input test data 
+        tokenizer (Any): tokenizer for data
+        batch_size (int): size for batches
+        max_len (int): max length for vectors
+
+    Returns:
+    --------
+        (DataLoader): test dataloader
+    """
     dataset = RussianStanceTwitterDataset(
         tweets=X_data,
         stances=[0] * len(X_data),
@@ -101,7 +137,24 @@ def create_test_dataloader(X_data: np.ndarray, tokenizer: Any, batch_size: int, 
         batch_size=batch_size,
     )
 
-def train_epoch(model: Any, data_loader: DataLoader, loss_fn: Any, optimizer: Any, device: torch.device, scheduler: Any, n_examples: int):
+def train_epoch(model: Any, data_loader: DataLoader, loss_fn: Any, optimizer: Any, device: torch.device, scheduler: Any, n_examples: int) -> Tuple[float, float]:
+    """
+    Training for epoch
+
+    Params:
+    -------
+        model (Any): model that trained
+        data_loader (DataLoader): train dataloader
+        loss_fn (Any): loss function
+        optimizer (Any): optimizer for training
+        device (torch.device): device for trainig
+        scheduler (Any): scheduler for trainig
+        n_examples (int): count of examples at data
+
+    Returns:
+    --------
+        (Tuple[float, float]): accuracy and loss
+    """
     model = model.train()
     losses = []
     correct_predictions = 0
@@ -130,6 +183,21 @@ def train_epoch(model: Any, data_loader: DataLoader, loss_fn: Any, optimizer: An
 
 @torch.no_grad()
 def eval_model(model: Any, data_loader: DataLoader, loss_fn: Any, device: torch.device, n_examples: int):
+    """
+    Validating for epoch
+
+    Params:
+    -------
+        model (Any): model that trained
+        data_loader (DataLoader): validation dataloader
+        loss_fn (Any): loss function
+        device (torch.device): device for validation
+        n_examples (int): count of examples at data
+
+    Returns:
+    --------
+        (Tuple[float, float]): accuracy and loss
+    """
     model = model.eval()
     losses = []
     correct_predictions = 0
@@ -150,7 +218,19 @@ def eval_model(model: Any, data_loader: DataLoader, loss_fn: Any, device: torch.
     return correct_predictions.double() / n_examples, np.mean(losses)
 
 @torch.no_grad()
-def get_predictions(model: Any, data_loader: DataLoader):
+def get_predictions(model: Any, data_loader: DataLoader) -> Tuple[Tensor, Tensor]:
+    """
+    Predicting labels for valid data
+
+    Params:
+    -------
+        model (Any): trained model
+        data_loader (DataLoader): validation dataloader
+
+    Returns:
+    --------
+        (Tuple[Tensor, Tensor]): predictions and probabilities
+    """
     model.eval()
     
     predictions = []
@@ -176,6 +256,17 @@ def get_predictions(model: Any, data_loader: DataLoader):
     return predictions, prediction_probs
 
 def include_info_about_topics(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Including information about topic like a feature
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+
+    Returns:
+    --------
+        data (pd.DataFrame): data with topic as a feature
+    """
     for i in range(data.shape[0]):
         tweet = data.loc[i].content
         topic = data.loc[i].topic
@@ -195,6 +286,17 @@ def include_info_about_topics(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Balancing data by labels
+
+    Params:
+    -------
+        train_data (pd.DataFrame): train dataframe
+
+    Returns:
+    --------
+        (pd.DataFrame): new train dataframe with balanced labels
+    """
     train_0 = train_data[train_data.stance == 0]
     train_1 = train_data[train_data.stance == 1]
     train_2 = train_data[train_data.stance == 2]
@@ -210,6 +312,19 @@ def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
     return train_data.sample(frac=1).reset_index(drop=True)
 
 def training(data: pd.DataFrame, batch_size: int, epochs: int, learning_rate_optimizer: float, n_classes: int, include_topics: bool = True, balancing: str = None) -> None:
+    """
+    Training model using BERT
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+        batch_size (int): size for batches
+        epochs (int): number of epochs
+        learning_rate_optimizer (float): learning rate for optimizer
+        n_classes (int): count of classes
+        include_topics (bool): flag for including topic as a feature
+        balancing (str): flag for balancing data
+    """
     seed(42)
     
     if include_topics:

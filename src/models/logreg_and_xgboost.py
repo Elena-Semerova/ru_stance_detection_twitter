@@ -7,12 +7,23 @@ from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report
-from typing import Tuple
+from typing import Tuple, Any
 import warnings
 
 warnings.filterwarnings('ignore')
 
 def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Balancing data by labels
+
+    Params:
+    -------
+        train_data (pd.DataFrame): train dataframe
+
+    Returns:
+    --------
+        (pd.DataFrame): new train dataframe with balanced labels
+    """
     train_0 = train_data[train_data.stance == 0]
     train_1 = train_data[train_data.stance == 1]
     train_2 = train_data[train_data.stance == 2]
@@ -28,6 +39,19 @@ def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
     return train_data.sample(frac=1).reset_index(drop=True)
 
 def make_train_valid(data: pd.DataFrame, test_shape: int = 8, balancing: str = None) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Making train and valid dataframes
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+        test_shape (int): ratio train and valid dataframes' shape
+        balancing (str): type of balancing data
+
+    Returns:
+    --------
+        train_data, valid_data (Tuple[pd.DataFrame, pd.DataFrame]): train and valid dataframes
+    """
     sample = data.sample(frac=1)
     train_data = sample.iloc[data.shape[0] // 100 * test_shape:]
     valid_data = sample.iloc[:data.shape[0] // 100 * test_shape]
@@ -54,7 +78,19 @@ def make_train_valid(data: pd.DataFrame, test_shape: int = 8, balancing: str = N
     
     return train_data, valid_data
 
-def bow_for_train(X_train_content: pd.DataFrame, save: bool = True) -> CountVectorizer:
+def bow_for_train(X_train_content: pd.DataFrame, save: bool = True) -> Any:
+    """
+    Making bag of words vectorizer for train dataframe
+
+    Params:
+    -------
+        X_train_content (pd.DataFrame): content from train dataframe
+        save (bool): flag for saving
+
+    Returns:
+    --------
+        bow_vectorizer (Any): trained vectorizer
+    """
     bow_vectorizer = CountVectorizer()
     X_train_bow = bow_vectorizer.fit_transform(X_train_content)
     
@@ -63,7 +99,19 @@ def bow_for_train(X_train_content: pd.DataFrame, save: bool = True) -> CountVect
         
     return bow_vectorizer
 
-def tfidf_for_train(X_train_content: pd.DataFrame, save: bool = True) -> TfidfVectorizer:
+def tfidf_for_train(X_train_content: pd.DataFrame, save: bool = True) -> Any:
+    """
+    Making tfidf vectorizer for train dataframe
+
+    Params:
+    -------
+        X_train_content (pd.DataFrame): content from train dataframe
+        save (bool): flag for saving
+
+    Returns:
+    --------
+        bow_vectorizer (Any): trained vectorizer
+    """
     tfidf_vectorizer = TfidfVectorizer()
     X_train_bow = tfidf_vectorizer.fit_transform(X_train_content)
     
@@ -72,7 +120,21 @@ def tfidf_for_train(X_train_content: pd.DataFrame, save: bool = True) -> TfidfVe
         
     return tfidf_vectorizer
 
-def bow_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: bool = True, save: bool = True) -> Tuple[CountVectorizer, CountVectorizer, CountVectorizer, CountVectorizer]:
+def bow_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: bool = True, save: bool = True) -> Tuple[Any, Any, Any, Any]:
+    """
+    Making bag of words for train and valid data
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+        balancing (str): type of balancing
+        topic_feature (bool): flag for including topic as a feature
+        save (bool): flag for saving
+
+    Returns:
+    --------
+        X_train_bow, X_valid_bow, y_train, y_valid (Tuple[Any, Any, Any, Any]): train and valid bag of words and labels
+    """
     X_train, X_valid = make_train_valid(data, balancing=balancing)
     
     if topic_feature:
@@ -107,7 +169,21 @@ def bow_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: bo
     
     return X_train_bow, X_valid_bow, y_train, y_valid
 
-def tfidf_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: bool = True, save: bool = True) -> Tuple[TfidfVectorizer, TfidfVectorizer, TfidfVectorizer, TfidfVectorizer]:
+def tfidf_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: bool = True, save: bool = True) -> Tuple[Any, Any, Any, Any]:
+    """
+    Making tfidf-vectors for train and valid data
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+        balancing (str): type of balancing
+        topic_feature (bool): flag for including topic as a feature
+        save (bool): flag for saving
+
+    Returns:
+    --------
+        X_train_bow, X_valid_bow, y_train, y_valid (Tuple[Any, Any, Any, Any]): train and valid tfidf-vectors and labels
+    """
     X_train, X_valid = make_train_valid(data, balancing=balancing)
     
     if topic_feature:
@@ -142,11 +218,23 @@ def tfidf_train_valid(data: pd.DataFrame, balancing: str = None, topic_feature: 
     
     return X_train_tfidf, X_valid_tfidf, y_train, y_valid
 
-def best_model(data: pd.DataFrame, model_name: str, vec_name: str, balancing: str = None, topic_feature: bool = True, save: bool = True) -> None:    
+def best_model(data: pd.DataFrame, model_name: str, vec_name: str, balancing: str = None, topic_feature: bool = True, save: bool = True) -> None:
+    """
+    Getting best trained model for input data
+
+    Params:
+    -------
+        data (pd.DataFrame): input data
+        model_name (str): name of trained model
+        vec_name (str): name of vectorizer
+        balancing (str): type of balancing
+        topic_feature (bool): flag for including topic as a feature
+        save (bool): flag for saving data after vectorizing
+    """
     if vec_name == 'bow':
-        X_train, X_valid, y_train, y_valid = bow_train_valid(data, balancing, topic_feature)
+        X_train, X_valid, y_train, y_valid = bow_train_valid(data, balancing, topic_feature, save)
     elif vec_name == 'tfidf':
-        X_train, X_valid, y_train, y_valid = tfidf_train_valid(data, balancing, topic_feature)
+        X_train, X_valid, y_train, y_valid = tfidf_train_valid(data, balancing, topic_feature, save)
     else:
         print('Choose bow or tfidf vectorizer')
         return
