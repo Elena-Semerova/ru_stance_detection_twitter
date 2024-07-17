@@ -5,6 +5,15 @@ keywords_lgbtq_plus_path: 'data/keywords/lgbtq_plus_keywords.txt'
 keywords_ageism_path: 'data/keywords/ageism_keywords.txt'
 keywords_lookism_path: 'data/keywords/lookism_keywords.txt'
 
+# files for examples
+data_cancel_culture_example_path: 'data/examples/cancel_culture_example.csv'
+data_feminism_example_path: 'data/examples/feminism_example.csv'
+data_cancel_lgbtq_plus_path: 'data/examples/lgbtq_plus_example.csv'
+data_cancel_ageism_path: 'data/examples/ageism_example.csv'
+data_lookism_example_path: 'data/examples/lookism_example.csv'
+data_after_toloka: 'data/examples/data_after_toloka_example.tsv'
+skills_from_toloka: 'data/examples/skils_from_toloka_example.csv'
+
 # all files with raw data
 raw_data_cancel_culture_path: 'data/raw_data/cancel_culture_all_data.csv'
 raw_data_feminism_path: 'data/raw_data/feminism_all_data.csv'

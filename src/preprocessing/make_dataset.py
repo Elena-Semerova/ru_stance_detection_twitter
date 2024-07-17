@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 import pandas as pd
 
@@ -28,7 +28,7 @@ def read_data(topic_name: str, path: str) -> pd.DataFrame:
 
 def make_dataset(
     topics: List[str],
-    topics_ru: List[str],
+    topics_ru: Dict[str, str],
     shuffle: bool = False,
     save: bool = False,
     config_path: str = CONFIG_PATH,
