@@ -26,6 +26,7 @@ MODEL = AutoModel.from_pretrained(BERT_MODEL)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 SEED_NUMBER = 42
+TOPICS = ["культура отмены", "феминизм", "ЛГБТК+", "эйджизм", "лукизм"]
 
 
 def seed(value: int = SEED_NUMBER) -> None:
@@ -302,16 +303,7 @@ def include_info_about_topics(data: pd.DataFrame) -> pd.DataFrame:
         tweet = data.loc[i].content
         topic = data.loc[i].topic
 
-        if topic == "культура отмены":
-            tweet_with_topic = "ТЕМА_КУЛЬТУРА_ОТМЕНЫ " + tweet
-        elif topic == "феминизм":
-            tweet_with_topic = "ТЕМА_ФЕМИНИЗМ " + tweet
-        elif topic == "ЛГБТК+":
-            tweet_with_topic = "ТЕМА_ЛГБТК+ " + tweet
-        elif topic == "эйджизм":
-            tweet_with_topic = "ТЕМА_ЭЙДЖИЗМ " + tweet
-        elif topic == "лукизм":
-            tweet_with_topic = "ТЕМА_ЛУКИЗМ " + tweet
+        tweet_with_topic = "ТЕМА_" + "_".join(topic.split()).upper() + " " + tweet
 
         data.loc[i, "content"] = tweet_with_topic
     return data
@@ -329,17 +321,17 @@ def balancing_data(train_data: pd.DataFrame) -> pd.DataFrame:
     --------
         (pd.DataFrame): new train dataframe with balanced labels
     """
-    train_0 = train_data[train_data.stance == 0]
-    train_1 = train_data[train_data.stance == 1]
-    train_2 = train_data[train_data.stance == 2]
+    labels_train = []
+    for i in range(3):
+        labels_train.append(train_data[train_data.stance == i])
 
-    minority = min([train_0.shape[0], train_1.shape[0], train_2.shape[0]])
+    minority = min([labels_train[i].shape[0] for i in range(3)])
 
-    train_0 = train_0.sample(minority)
-    train_1 = train_1.sample(minority)
-    train_2 = train_2.sample(minority)
+    labels_train_min = []
+    for i in range(3):
+        labels_train_min.append(labels_train[i].sample(minority))
 
-    train_data = pd.concat([train_0, train_1, train_2], ignore_index=True)
+    train_data = pd.concat(labels_train_min, ignore_index=True)
 
     return train_data.sample(frac=1).reset_index(drop=True)
 
@@ -350,6 +342,7 @@ def training(
     epochs: int,
     learning_rate_optimizer: float,
     n_classes: int,
+    topics: List[str] = TOPICS,
     include_topics: bool = True,
     balancing: str = None,
     tokenizer: Any = TOKENIZER,
@@ -365,8 +358,11 @@ def training(
         epochs (int): number of epochs
         learning_rate_optimizer (float): learning rate for optimizer
         n_classes (int): count of classes
+        topics (List[str]): list of topics at dataframe
         include_topics (bool): flag for including topic as a feature
         balancing (str): flag for balancing data
+        tokenizer (Any): tokenizer for training
+        device (torch.device): device for training
     """
     seed()
 
@@ -380,28 +376,13 @@ def training(
     if balancing == "all":
         train_data = balancing_data(train_data)
     elif balancing == "each":
-        train_data_cc = train_data[train_data.topic == "культура отмены"]
-        train_data_fem = train_data[train_data.topic == "феминизм"]
-        train_data_lgbt = train_data[train_data.topic == "ЛГБТК+"]
-        train_data_age = train_data[train_data.topic == "эйджизм"]
-        train_data_look = train_data[train_data.topic == "лукизм"]
+        all_topics = []
+        for topic in topics:
+            train_data_topic = train_data[train_data.topic == topic]
+            train_data_topic = balancing_data(train_data_topic)
+            all_topics.append(train_data_topic)
 
-        train_data_cc = balancing_data(train_data_cc)
-        train_data_fem = balancing_data(train_data_fem)
-        train_data_lgbt = balancing_data(train_data_lgbt)
-        train_data_age = balancing_data(train_data_age)
-        train_data_look = balancing_data(train_data_look)
-
-        train_data = pd.concat(
-            [
-                train_data_cc,
-                train_data_fem,
-                train_data_lgbt,
-                train_data_age,
-                train_data_look,
-            ],
-            ignore_index=True,
-        )
+        train_data = pd.concat(all_topics, ignore_index=True)
 
         train_data = train_data.sample(frac=1).reset_index(drop=True)
 

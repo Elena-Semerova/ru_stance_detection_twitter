@@ -4,7 +4,11 @@ from typing import List
 
 import pandas as pd
 
+from src.utils import read_yml_file
+
 warnings.filterwarnings("ignore")
+
+CONFIG_PATH = "configs/name_config.yaml"
 
 
 def replacing(symbols: List[str], replacement: List[str], tweet: str) -> str:
@@ -163,7 +167,7 @@ def cleaning_data(data: pd.DataFrame) -> pd.DataFrame:
     return data
 
 
-def saving(data: pd.DataFrame, topic_name: str) -> None:
+def saving(data: pd.DataFrame, topic_name: str, config_path: str = CONFIG_PATH) -> None:
     """
     Saving dataframe
 
@@ -171,10 +175,11 @@ def saving(data: pd.DataFrame, topic_name: str) -> None:
     -------
         data (pd.DataFrame): dataframe to save
         topic_name (str): name of dataframe's topic
+        config_path (str): path to config file
     """
-    # to do: name config
-    path = "data/" + topic_name + "_clean.csv"
-    data.to_csv(path, index=False)
+    name_config = read_yml_file(config_path)
+    path = "clean_data_" + topic_name + "_path"
+    data.to_csv(name_config[path], index=False)
 
 
 def preprocess(data: pd.DataFrame, topic_name: str, save: bool = False) -> pd.DataFrame:

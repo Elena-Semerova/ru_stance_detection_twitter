@@ -1,14 +1,23 @@
 import numpy as np
 import pandas as pd
 
+from typing import Dict, List
 
-def aggeregate_stance(data: pd.DataFrame) -> pd.DataFrame:
+LABELS_DICT = {
+    'stance': ['favor', 'against', 'neutral', 'error'],
+    'sentiment': ['positive', 'negative', 'neutral']
+}
+
+
+def aggregate_target(data: pd.DataFrame, target_feature: str, labels_dict: Dict[str, List[str]] = LABELS_DICT) -> pd.DataFrame:
     """
-    Aggregating labels with stances after toloka
+    Aggregating labels after toloka
 
     Params:
     -------
         data (pd.DataFrame): dataframe with answers after toloka
+        target_feature (str): target to aggregate
+        labels_dict (Dict[str, List[str]]): dict with names of targets and possible labels
 
     Returns:
     --------
@@ -19,106 +28,20 @@ def aggeregate_stance(data: pd.DataFrame) -> pd.DataFrame:
     data["true"] = [""] * data.shape[0]
 
     for i in range(0, data.shape[0], 3):
-        stance_1 = data.iloc[i].stance
-        stance_2 = data.iloc[i + 1].stance
-        stance_3 = data.iloc[i + 2].stance
-
-        weight_1 = data.iloc[i].weight
-        weight_2 = data.iloc[i + 1].weight
-        weight_3 = data.iloc[i + 2].weight
-
-        stances = [stance_1, stance_2, stance_3]
-        weights = [weight_1, weight_2, weight_3]
-        # favor, against, neutral, error
-        probs = [0, 0, 0, 0]
+        labels = [data.iloc[j].stance for j in range(i, i + 3)]
+        weights = [data.iloc[j].weight for j in range(i, i + 3)]
+        probs = [[0]] * len(LABELS_DICT[target_feature])
 
         for j in range(3):
-            if stances[j] == "favor":
-                probs[0] += weights[j] / 3
-            if stances[j] == "against":
-                probs[1] += weights[j] / 3
-            if stances[j] == "neutral":
-                probs[2] += weights[j] / 3
-            if stances[j] == "error":
-                probs[3] += weights[j] / 3
+            label_index = LABELS_DICT[target_feature].index(labels[j])
+            probs[label_index] += weights[j] / 3
 
         true_idx = np.argmax(probs)
-        if true_idx == 0:
-            data.loc[i, "true"] = "favor"
-            data.loc[i + 1, "true"] = "favor"
-            data.loc[i + 2, "true"] = "favor"
-        elif true_idx == 1:
-            data.loc[i, "true"] = "against"
-            data.loc[i + 1, "true"] = "against"
-            data.loc[i + 2, "true"] = "against"
-        elif true_idx == 2:
-            data.loc[i, "true"] = "neutral"
-            data.loc[i + 1, "true"] = "neutral"
-            data.loc[i + 2, "true"] = "neutral"
-        elif true_idx == 3:
-            data.loc[i, "true"] = "error"
-            data.loc[i + 1, "true"] = "error"
-            data.loc[i + 2, "true"] = "error"
 
-    data = data[data.stance == data.true]
+        for j in range(i, i + 3):
+            data.loc[j, "true"] = LABELS_DICT[target_feature][true_idx]
+
+    data = data[data[target_feature] == data.true]
     data = data.drop_duplicates(subset=["content"], keep="first")
 
-    return data[["topic", "content", "stance"]]
-
-
-def aggregate_sentiment(data: pd.DataFrame) -> pd.DataFrame:
-    """
-    Aggregating labels with sentiments after toloka
-
-    Params:
-    -------
-        data (pd.DataFrame): dataframe with answers after toloka
-
-    Returns:
-    --------
-        (pd.DataFrame): dataframe with final labels
-    """
-    data = data.sort_values(by=["content", "skill"])
-    data = data.set_index(pd.Series([i for i in range(data.shape[0])]))
-    data["true"] = [""] * data.shape[0]
-
-    for i in range(0, data.shape[0], 3):
-        sentiment_1 = data.iloc[i].sentiment
-        sentiment_2 = data.iloc[i + 1].sentiment
-        sentiment_3 = data.iloc[i + 2].sentiment
-
-        weight_1 = data.iloc[i].weight
-        weight_2 = data.iloc[i + 1].weight
-        weight_3 = data.iloc[i + 2].weight
-
-        sentiments = [sentiment_1, sentiment_2, sentiment_3]
-        weights = [weight_1, weight_2, weight_3]
-        # positive, negative, neutral
-        probs = [0, 0, 0]
-
-        for j in range(3):
-            if sentiments[j] == "positive":
-                probs[0] += weights[j] / 3
-            if sentiments[j] == "negative":
-                probs[1] += weights[j] / 3
-            if sentiments[j] == "neutral":
-                probs[2] += weights[j] / 3
-
-        true_idx = np.argmax(probs)
-        if true_idx == 0:
-            data.loc[i, "true"] = "positive"
-            data.loc[i + 1, "true"] = "positive"
-            data.loc[i + 2, "true"] = "positive"
-        elif true_idx == 1:
-            data.loc[i, "true"] = "negative"
-            data.loc[i + 1, "true"] = "negative"
-            data.loc[i + 2, "true"] = "negative"
-        elif true_idx == 2:
-            data.loc[i, "true"] = "neutral"
-            data.loc[i + 1, "true"] = "neutral"
-            data.loc[i + 2, "true"] = "neutral"
-
-    data = data[data.sentiment == data.true]
-    data = data.drop_duplicates(subset=["content"], keep="first")
-
-    return data[["topic", "content", "sentiment"]]
+    return data[["topic", "content", target_feature]]
